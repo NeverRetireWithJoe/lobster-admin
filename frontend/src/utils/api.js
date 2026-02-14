@@ -1,19 +1,27 @@
 import axios from 'axios';
 
-// 從環境變數讀取 API URL，如果沒有則使用本地
+const IS_VERCEL = window.location.hostname.includes('vercel.app');
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
-const baseURL = API_BASE_URL ? `${API_BASE_URL}/api` : '/api';
 
 const api = axios.create({
-  baseURL,
+  baseURL: API_BASE_URL ? `${API_BASE_URL}/api` : '/api',
 });
 
-// 請求攔截器：添加 token
+// 請求攔截器
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // On Vercel: rewrite requests through serverless proxy
+  // e.g. /auth/login → /api/proxy?p=/auth/login
+  if (IS_VERCEL && !API_BASE_URL) {
+    const path = config.url || '';
+    config.baseURL = '';
+    config.url = `/api/proxy?p=${encodeURIComponent(path)}`;
+  }
+
   return config;
 });
 
