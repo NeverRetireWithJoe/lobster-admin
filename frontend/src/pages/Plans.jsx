@@ -58,25 +58,25 @@ function Plans() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-orange-400">💎 方案管理</h1>
-        <div className="space-x-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-orange-400">💎 方案管理</h1>
+        <div className="flex gap-2 w-full sm:w-auto">
           <button
             onClick={addPlan}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            className="flex-1 sm:flex-none px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
           >
-            ➕ 新增方案
+            ➕ 新增
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            className="flex-1 sm:flex-none px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors text-sm"
           >
-            💾 儲存變更
+            💾 儲存
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {plans.map((plan, index) => (
           <PlanCard
             key={plan.id}
