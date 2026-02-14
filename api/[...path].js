@@ -2,38 +2,46 @@
 const BACKEND = 'http://82.197.94.119:8080';
 
 export default async function handler(req, res) {
-  const path = req.url; // e.g. /api/auth/login
-  const url = `${BACKEND}${path}`;
+  // req.url = /api/auth/login (full path including /api)
+  const url = `${BACKEND}${req.url}`;
 
   try {
-    const headers = { ...req.headers };
-    delete headers.host;
-    delete headers['content-length'];
-
     const fetchOpts = {
       method: req.method,
-      headers: {
-        'Content-Type': req.headers['content-type'] || 'application/json',
-      },
+      headers: {},
     };
+
+    // Forward content-type
+    if (req.headers['content-type']) {
+      fetchOpts.headers['Content-Type'] = req.headers['content-type'];
+    }
 
     // Forward auth header
     if (req.headers.authorization) {
       fetchOpts.headers['Authorization'] = req.headers.authorization;
     }
 
-    // Forward body for POST/PUT/PATCH
-    if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
-      fetchOpts.body = JSON.stringify(req.body);
+    // Forward body for POST/PUT/PATCH/DELETE
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) && req.body) {
+      fetchOpts.body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
     }
 
     const response = await fetch(url, fetchOpts);
+    const contentType = response.headers.get('content-type') || 'application/json';
     const data = await response.text();
 
-    // Forward response headers
-    res.status(response.status);
-    res.setHeader('Content-Type', response.headers.get('content-type') || 'application/json');
-    res.send(data);
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+
+    res.setHeader('Content-Type', contentType);
+    res.status(response.status).send(data);
   } catch (err) {
     res.status(502).json({ error: 'Backend unreachable', detail: err.message });
   }
