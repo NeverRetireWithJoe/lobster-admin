@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import db, { initDatabase } from '../backend/database.js';
+import { initDatabase } from '../backend/database.js';
 import { authMiddleware } from '../backend/auth.js';
 import authRoutes from '../backend/routes/auth.js';
 import dashboardRoutes from '../backend/routes/dashboard.js';
@@ -17,8 +17,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Init DB once
-initDatabase();
+// Lazy init middleware
+let dbReady = false;
+app.use(async (req, res, next) => {
+  if (!dbReady) {
+    await initDatabase();
+    dbReady = true;
+  }
+  next();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);

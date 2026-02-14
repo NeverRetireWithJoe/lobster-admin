@@ -8,17 +8,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 let db;
+let SQL;
 const dbPath = join(__dirname, '..', 'database.db');
 
-// 初始化 SQL.js
-const SQL = await initSqlJs();
-
-// 載入或創建資料庫
-if (fs.existsSync(dbPath)) {
-  const buffer = fs.readFileSync(dbPath);
-  db = new SQL.Database(buffer);
-} else {
-  db = new SQL.Database();
+// 延遲初始化 SQL.js
+async function ensureDB() {
+  if (db) return;
+  SQL = await initSqlJs();
+  if (fs.existsSync(dbPath)) {
+    const buffer = fs.readFileSync(dbPath);
+    db = new SQL.Database(buffer);
+  } else {
+    db = new SQL.Database();
+  }
 }
 
 // 保存資料庫到文件
@@ -71,7 +73,8 @@ const dbWrapper = {
 };
 
 // 初始化資料庫
-export function initDatabase() {
+export async function initDatabase() {
+  await ensureDB();
   // 管理員表
   dbWrapper.exec(`
     CREATE TABLE IF NOT EXISTS admins (
