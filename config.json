@@ -1,0 +1,37 @@
+{
+  "plans": [
+    {
+      "id": "personal",
+      "name": "🦞 個人版",
+      "price": 500,
+      "userLimit": 1,
+      "dailyMessageLimit": 50,
+      "monthlyTokenLimit": 5000000,
+      "features": ["基本功能"]
+    },
+    {
+      "id": "family",
+      "name": "👨‍👩‍👧 家庭版",
+      "price": 1000,
+      "userLimit": 3,
+      "dailyMessageLimit": 50,
+      "monthlyTokenLimit": 15000000,
+      "features": ["基本功能", "共享行程"]
+    },
+    {
+      "id": "enterprise",
+      "name": "🏢 企業版",
+      "price": 3000,
+      "userLimit": 10,
+      "dailyMessageLimit": 30,
+      "monthlyTokenLimit": 30000000,
+      "features": ["基本功能", "共享行程", "排程功能"]
+    }
+  ],
+  "settings": {
+    "trialDays": 7,
+    "trialDailyMessageLimit": 20,
+    "expiredDailyMessageLimit": 3,
+    "rateLimitSeconds": 2
+  }
+}
