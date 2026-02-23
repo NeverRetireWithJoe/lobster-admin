@@ -8,9 +8,9 @@ const router = express.Router();
 const AGENTS_DIR = '/home/autorun/.openclaw/agents';
 const WORKSPACE_BASE = '/home/autorun/.openclaw/workspace';
 const BOT_TOKENS = {
-  smartbot1: '8508689248:AAF40woCrg2KZiwPU1NOVWJPPYwryR5Jky8',
-  smartbot2: '8387963354:AAH42EXV109VP4C3-dQVcozqiNNB8Pm98RQ',
-  smartbot3: '8472506025:AAHSuzlb4ITj5gWxLOv4pG1hUFeovbQM2SA',
+  smartbot1: '8508689248:AAGH9HzF99GWp7liqh9f9G8X0bd9xpTAgH0',
+  smartbot2: '8387963354:AAEnRJAUYsG_cemHPL9Lfe9lpo6hxOZeOCY',
+  smartbot3: '8472506025:AAH_81yLOjSGfWF1eYhyW6SbMLObEXDC7-Q',
 };
 const BOTS = [
   { id: 'smartbot1', name: '智能軍師_1', telegram: '@bestmove_1_bot' },
